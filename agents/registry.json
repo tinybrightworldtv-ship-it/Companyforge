@@ -19,14 +19,14 @@
       "id": "strategy",
       "name": "Strategy Agent",
       "role": "strategy",
-      "status": "planned",
+      "status": "active",
       "purpose": "Turn evidence into positioning, business models, priorities, and experiments."
     },
     {
       "id": "product",
       "name": "Product Manager Agent",
       "role": "product",
-      "status": "planned",
+      "status": "active",
       "purpose": "Create product requirements, user stories, acceptance criteria, and product priorities."
     },
     {
