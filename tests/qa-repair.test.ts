@@ -1,0 +1,2 @@
+import {buildQAReport} from "../core/qa";import {createRepairTasks} from "../core/qa/repair";
+test("failed QA checks become actionable Builder tasks",()=>{const r=buildQAReport({websiteBuildId:"b1",checks:[{kind:"links",status:"fail",message:"Broken link",evidence:{href:"/pricing"},fix:"Repair pricing route"}]});const tasks=createRepairTasks(r);expect(tasks[0].objective).toBe("Repair pricing route");expect(tasks[0].expectedOutcome).toContain("passes")});
