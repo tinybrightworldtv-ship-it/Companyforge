@@ -7,6 +7,7 @@ export interface RuntimeStore {
 
 export interface TaskQueueStore extends RuntimeStore {
   listQueuedTasks(companyId: string, limit?: number): Promise<AgentTask[]>;
+  getTask(taskId: string): Promise<AgentTask | null>;
   claimTask(taskId: string): Promise<AgentTask | null>;
 }
 
@@ -30,6 +31,8 @@ export class InMemoryRuntimeStore implements TaskQueueStore {
       .filter(t => t.company_id === companyId && t.status === "queued")
       .slice(0, limit);
   }
+
+  async getTask(taskId: string): Promise<AgentTask | null> { return this.tasks.get(taskId) ? { ...this.tasks.get(taskId)! } : null; }
 
   async claimTask(taskId: string): Promise<AgentTask | null> {
     const task = this.tasks.get(taskId);
