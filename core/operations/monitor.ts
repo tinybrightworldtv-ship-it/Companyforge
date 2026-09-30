@@ -1,0 +1,2 @@
+import type {Incident,ServiceSignal} from "./types";
+export function detectIncidents(companyId:string,signals:ServiceSignal[]):Incident[]{return signals.filter(s=>s.status!=="healthy").map(s=>({incidentId:`${companyId}:${s.service}:${s.timestamp}`,companyId,severity:s.status==="down"?"critical":"warning",service:s.service,summary:`${s.service} is ${s.status}`,createdAt:s.timestamp,status:"open",recommendedAction:s.status==="down"?"Escalate immediately and execute only pre-approved recovery actions.":"Investigate degradation and monitor the next signal."}))}
