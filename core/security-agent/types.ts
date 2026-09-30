@@ -1,0 +1,1 @@
+export interface SecurityReview{passed:boolean;findings:string[];requiredControls:string[];evidence:string[];actions:string[]}
