@@ -1,0 +1,1 @@
+import assert from "node:assert/strict"; import {detectIncidents} from "../core/operations"; const x=detectIncidents("c",[{service:"api",status:"down",timestamp:"t"}]); assert.equal(x[0].severity,"critical"); console.log("Operations tests passed.");
