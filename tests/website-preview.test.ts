@@ -1,2 +1,7 @@
+import assert from "node:assert/strict";
 import {queuePreviewBuild} from "../core/website/preview";
-test("preview builds start queued and require evidence for completion",()=>{const b=queuePreviewBuild("build-1");expect(b.status).toBe("queued");expect(b.buildCommand).toBe("npm run build");expect(b.previewUrl).toBeUndefined();});
+const b=queuePreviewBuild("build-1");
+assert.equal(b.status,"queued");
+assert.equal(b.buildCommand,"npm run build");
+assert.equal(b.previewUrl,undefined);
+console.log("Website preview tests passed.");
