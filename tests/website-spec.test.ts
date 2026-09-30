@@ -1,2 +1,7 @@
+import assert from "node:assert/strict";
 import { createWebsiteSpec } from "../core/website/spec";
-test("website spec creates pages and purposeful 3D plan",()=>{const s=createWebsiteSpec({companyId:"c",name:"Demo",description:"automates invoices",targetCustomer:"small businesses",desiredOutcome:"save time",siteType:"saas",include3D:true});expect(s.pages.length).toBeGreaterThan(3);expect(s.assets.some(a=>a.type==="3d_scene")).toBe(true);expect(s.acceptance.some(x=>x.includes("deployment"))).toBe(true);});
+const s=createWebsiteSpec({companyId:"c",name:"Demo",description:"automates invoices",targetCustomer:"small businesses",desiredOutcome:"save time",siteType:"saas",include3D:true});
+assert.ok(s.pages.length>3);
+assert.ok(s.assets.some(a=>a.type==="3d_scene"));
+assert.ok(s.acceptance.some(x=>x.includes("deployment")));
+console.log("Website spec tests passed.");
