@@ -1,6 +1,6 @@
 import {NextResponse} from "next/server";
 import {createClient} from "../../../lib/supabase/server";
-import {createCompanyForgeRuntime} from "../../../../../core/runtime";
+import {createCompanyForgeRuntime} from "../../../../../../core/runtime";
 
 export async function POST(req:Request){
  const supabase=await createClient(); const {data:claimsData}=await supabase.auth.getClaims(); const userId=claimsData?.claims?.sub;
