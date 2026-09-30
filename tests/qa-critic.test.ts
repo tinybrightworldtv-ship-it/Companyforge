@@ -1,0 +1,3 @@
+import {buildQAReport} from "../core/qa";
+test("critic fails when a blocking browser check fails",()=>{const r=buildQAReport({websiteBuildId:"b1",checks:[{kind:"page",status:"pass",message:"Page loaded",evidence:{httpStatus:200}},{kind:"console",status:"fail",message:"Console error detected",evidence:{count:1},fix:"Fix runtime error"}]});expect(r.status).toBe("failed");expect(r.blockingIssues).toContain("Console error detected")});
+test("critic passes with evidence-backed checks",()=>{const r=buildQAReport({websiteBuildId:"b1",checks:[{kind:"page",status:"pass",message:"Page loaded",evidence:{httpStatus:200}}]});expect(r.status).toBe("passed")});
