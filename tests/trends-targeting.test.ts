@@ -1,0 +1,10 @@
+import assert from "node:assert/strict";
+import {buildTrendOpportunity} from "../core/growth/trends";
+import {classifyTargetModel,buildTargetProfile} from "../core/growth/targeting";
+const model=classifyTargetModel({businessIdea:"AI SaaS for small businesses"});
+assert.equal(model,"developer_technical");
+const profile=buildTargetProfile({model:"business_b2b",customerDescription:"small agencies with missed leads"});
+assert.ok(profile.primaryDimensions.includes("industry"));
+const opportunity=buildTrendOpportunity({businessCategory:"lead automation",targetCustomer:"small agencies",signal:{topic:"lead follow-up",source:"google_trends",direction:"rising",evidence:["search interest rising"],observedAt:new Date().toISOString(),confidence:.8}});
+assert.ok(opportunity.acquisitionAngles.length>0);
+console.log("Trends and targeting tests passed.");
