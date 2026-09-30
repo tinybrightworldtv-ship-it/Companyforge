@@ -1,0 +1,2 @@
+import {DashboardSummary} from "./types";
+export async function getDashboardSummary(companyId:string):Promise<DashboardSummary>{return{companyId,companyName:"CompanyForge Company",autonomy:"supervised",status:"active",activeAgents:0,runningTasks:0,pendingApprovals:0,failedTasks:0,recentTasks:[]};}
