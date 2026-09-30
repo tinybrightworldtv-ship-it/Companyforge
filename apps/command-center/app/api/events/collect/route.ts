@@ -3,9 +3,10 @@ import {createClient as createSupabaseClient} from "@supabase/supabase-js";
 import {validatePublicEvent} from "../../../../../../core/growth/event-ingestion";
 
 const allowedOrigins=()=>process.env.PUBLIC_EVENT_ALLOWED_ORIGINS?.split(",").map(v=>v.trim()).filter(Boolean)??[];
-const corsHeaders=(origin:string|null)=>{
- const configured=allowedOrigins(); const allow=origin&&configured.includes(origin)?origin:configured.length===0?"*":undefined;
- return allow?{"Access-Control-Allow-Origin":allow,"Access-Control-Allow-Methods":"POST,OPTIONS","Access-Control-Allow-Headers":"Content-Type"}:{};
+const corsHeaders=(origin:string|null):Record<string,string>=>{
+ const configured=allowedOrigins(); const allow=origin&&configured.includes(origin)?origin:configured.length===0?"*":null;
+ if(!allow)return {};
+ return {"Access-Control-Allow-Origin":allow,"Access-Control-Allow-Methods":"POST,OPTIONS","Access-Control-Allow-Headers":"Content-Type"};
 };
 export async function OPTIONS(request:Request){return new NextResponse(null,{status:204,headers:corsHeaders(request.headers.get("origin"))});}
 
