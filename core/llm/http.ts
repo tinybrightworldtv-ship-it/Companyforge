@@ -1,4 +1,4 @@
-import { LLMError } from "./errors.js";
+import { LLMError } from "./errors";
 export async function postJson(url: string, headers: Record<string,string>, body: unknown): Promise<Record<string,any>> {
   const response = await fetch(url,{method:"POST",headers:{"content-type":"application/json",...headers},body:JSON.stringify(body)});
   const raw = await response.text();
