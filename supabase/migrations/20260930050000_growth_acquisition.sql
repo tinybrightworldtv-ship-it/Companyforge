@@ -45,7 +45,9 @@ create index if not exists growth_target_profiles_company_idx on public.growth_t
 create index if not exists trend_signals_company_observed_idx on public.trend_signals(company_id,observed_at desc);
 create index if not exists acquisition_campaigns_company_status_idx on public.acquisition_campaigns(company_id,status);
 create index if not exists acquisition_events_company_time_idx on public.acquisition_events(company_id,occurred_at desc);
+create index if not exists acquisition_events_campaign_idx on public.acquisition_events(campaign_id);
 create index if not exists social_publications_company_status_idx on public.social_publications(company_id,status);
+create index if not exists social_publications_campaign_idx on public.social_publications(campaign_id);
 create index if not exists ad_platform_accounts_company_idx on public.ad_platform_accounts(company_id);
 
 alter table public.growth_target_profiles enable row level security;
