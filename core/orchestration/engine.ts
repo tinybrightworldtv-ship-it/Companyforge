@@ -18,7 +18,7 @@ export class TaskOrchestrationEngine {
     const status = records.some(r=>r.outcome==="failed") ? "failed" : records.some(r=>r.outcome==="blocked"||r.outcome==="awaiting_approval") ? "blocked" : "completed";
     return {runId,companyId,records,status};
   }
-  private async executeWithRetry(task: AgentTask): Promise<TaskExecutionRecord> {
+  async resumeApproved(task: AgentTask): Promise<TaskExecutionRecord> { if(task.status!=="awaiting_approval"||task.approval?.status!=="approved") throw new Error("Task is not approved for resumption."); task.status="queued"; return this.executeWithRetry(task); }\n  private async executeWithRetry(task: AgentTask): Promise<TaskExecutionRecord> {
     let attempts=0; let last: AgentResult|undefined;
     while(attempts<=this.maxRetries){ attempts++; const executableTask={...task,dependencies:[]}; const risk=task.priority==="critical"?"high":task.priority==="high"?"medium":"low"; last=await this.runtime.run(executableTask,"WRITE","orchestrated-task",risk); if(last.status==="completed") return {taskId:task.task_id,attempts,outcome:"completed",result:last}; if(last.status==="blocked"||last.approval_required) return {taskId:task.task_id,attempts,outcome:"awaiting_approval",result:last}; }
     return {taskId:task.task_id,attempts,outcome:"failed",result:last,error:last?.summary};
