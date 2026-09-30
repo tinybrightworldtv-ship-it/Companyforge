@@ -1,0 +1,12 @@
+import { strict as assert } from "node:assert";
+import { AgentRuntime } from "../core/agent-runtime/runtime";
+import { AgentDefinition, AgentPolicy, AgentTask } from "../core/agent-runtime/types";
+import { TaskOrchestrationEngine } from "../core/orchestration/engine";
+const runtime=new AgentRuntime();
+const agents:AgentDefinition[]=[{id:"research",name:"Research",role:"research",status:"planned",purpose:"Research."},{id:"strategy",name:"Strategy",role:"strategy",status:"planned",purpose:"Strategy."}];
+const policy:AgentPolicy={allowed_levels:["READ","WRITE"]};
+runtime.register(agents[0],policy,async ({task})=>({summary:"completed "+task.task_id}));
+runtime.register(agents[1],policy,async ({task})=>({summary:"completed "+task.task_id}));
+const tasks:AgentTask[]=[{task_id:"task-1",company_id:"c1",objective:"research",assigned_agent:"research",priority:"high",inputs:{},constraints:[],dependencies:[],expected_outcome:"research done",approval:{required:false,status:"not_required"},status:"queued"},{task_id:"task-2",company_id:"c1",objective:"strategy",assigned_agent:"strategy",priority:"normal",inputs:{},constraints:[],dependencies:["task-1"],expected_outcome:"strategy done",approval:{required:false,status:"not_required"},status:"queued"}];
+const result=await new TaskOrchestrationEngine(runtime).run("c1",tasks);
+assert.equal(result.status,"completed"); assert.equal(result.records[1].taskId,"task-2"); assert.equal(result.records[1].attempts,1); console.log("Orchestration tests passed.");
