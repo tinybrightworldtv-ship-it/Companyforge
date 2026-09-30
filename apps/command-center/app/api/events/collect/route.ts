@@ -1,6 +1,6 @@
 import {NextResponse} from "next/server";
 import {createClient as createSupabaseClient} from "@supabase/supabase-js";
-import {validatePublicEvent} from "../../../../../../../core/growth/event-ingestion";
+import {validatePublicEvent} from "../../../../../../core/growth/event-ingestion";
 
 const allowedOrigins=()=>process.env.PUBLIC_EVENT_ALLOWED_ORIGINS?.split(",").map(v=>v.trim()).filter(Boolean)??[];
 
