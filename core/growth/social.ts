@@ -1,40 +1,7 @@
 import type {DistributionChannel} from "./distribution";
-
-export interface SocialPostDraft {
-  channel: Extract<DistributionChannel,"instagram"|"facebook"|"tiktok"|"youtube"|"linkedin"|"pinterest"|"x">;
-  hook: string;
-  body: string;
-  cta: string;
-  destinationUrl: string;
-  mediaBrief: string;
-  tracking: Record<string,string>;
-  approvalRequired: boolean;
-}
-
-export function createSocialPostDraft(input:{
-  channel: SocialPostDraft["channel"];
-  offer: string;
-  audience: string;
-  destinationUrl: string;
-  campaignId: string;
-}): SocialPostDraft {
-  const names:Record<SocialPostDraft["channel"],string>={
-    instagram:"Visual-first hook and concise caption",
-    facebook:"Problem/benefit framing with conversational context",
-    tiktok:"Fast problem → demonstration → payoff",
-    youtube:"Searchable title and useful explanation",
-    linkedin:"Business outcome and proof-oriented framing",
-    pinterest:"Searchable idea title and visual promise",
-    x:"Short insight with a clear curiosity hook"
-  };
-  return {
-    channel:input.channel,
-    hook:names[input.channel]+": "+input.offer,
-    body:"Help "+input.audience+" understand the problem, the outcome and why this offer is relevant.",
-    cta:"Learn more",
-    destinationUrl:input.destinationUrl,
-    mediaBrief:"Create an original platform-native visual/video showing the problem and the promised outcome. Do not imply unsupported results.",
-    tracking:{utm_source:input.channel,utm_medium:"organic_social",utm_campaign:input.campaignId},
-    approvalRequired:input.channel==="facebook"
-  };
+export type SocialPublishingChannel=Extract<DistributionChannel,"instagram"|"facebook"|"tiktok"|"youtube"|"linkedin"|"pinterest"|"x"|"threads">;
+export interface SocialPostDraft{channel:SocialPublishingChannel;hook:string;body:string;cta:string;destinationUrl:string;mediaBrief:string;tracking:Record<string,string>;approvalRequired:boolean;}
+export function createSocialPostDraft(input:{channel:SocialPublishingChannel;offer:string;audience:string;destinationUrl:string;campaignId:string}):SocialPostDraft{
+ const names:Record<SocialPublishingChannel,string>={instagram:"Visual hook",facebook:"Problem benefit",tiktok:"Fast problem solution",youtube:"Searchable explanation",linkedin:"Business outcome",pinterest:"Searchable visual idea",x:"Short insight",threads:"Conversation hook"};
+ return {channel:input.channel,hook:names[input.channel]+": "+input.offer,body:"Explain the problem, outcome and offer to "+input.audience+".",cta:"Learn more",destinationUrl:input.destinationUrl,mediaBrief:"Create original platform-native media.",tracking:{utm_source:input.channel,utm_medium:"organic_social",utm_campaign:input.campaignId},approvalRequired:false};
 }
