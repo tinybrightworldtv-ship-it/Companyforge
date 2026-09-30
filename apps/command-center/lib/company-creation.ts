@@ -95,7 +95,7 @@ export async function createCompany(input: CompanyCreationInput) {
       company_id: company.id,
       objective: "Create the company's validated business thesis, research plan, website specification, brand direction, image plan, 3D plan, and execution roadmap.",
       assigned_agent: "ceo",
-      priority: "high",
+      priority: "normal",
       inputs: { targetCustomer: input.targetCustomer, desiredOutcome: input.desiredOutcome, siteType: input.siteType },
       constraints: [input.constraints].filter(Boolean),
       dependencies: [],
