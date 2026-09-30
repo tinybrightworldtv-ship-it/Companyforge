@@ -5,7 +5,7 @@
       "id": "ceo",
       "name": "AI CEO / Orchestrator",
       "role": "orchestrator",
-      "status": "planned",
+      "status": "active",
       "purpose": "Own company goals, decompose objectives, delegate work, track dependencies, resolve conflicts, and escalate high-impact decisions."
     },
     {
@@ -33,7 +33,7 @@
       "id": "builder",
       "name": "Builder Agent",
       "role": "builder",
-      "status": "planned",
+      "status": "active",
       "purpose": "Implement approved software and product changes within repository scope."
     },
     {
@@ -47,42 +47,42 @@
       "id": "growth",
       "name": "Growth Agent",
       "role": "growth",
-      "status": "planned",
+      "status": "active",
       "purpose": "Design and run approved acquisition and growth experiments."
     },
     {
       "id": "customer_intelligence",
       "name": "Customer Intelligence Agent",
       "role": "customer_intelligence",
-      "status": "planned",
+      "status": "active",
       "purpose": "Turn customer feedback and behavior into insights, risks, and product opportunities."
     },
     {
       "id": "operations",
       "name": "Operations Agent",
       "role": "operations",
-      "status": "planned",
+      "status": "active",
       "purpose": "Monitor recurring technical and business workflows and surface operational issues."
     },
     {
       "id": "analytics",
       "name": "Analytics Agent",
       "role": "analytics",
-      "status": "planned",
+      "status": "active",
       "purpose": "Measure performance, experiments, anomalies, and outcome trends."
     },
     {
       "id": "finance",
       "name": "Finance / Revenue Agent",
       "role": "finance",
-      "status": "planned",
+      "status": "active",
       "purpose": "Track revenue, costs, unit economics, budgets, and financial alerts."
     },
     {
       "id": "security",
       "name": "Security & Governance Agent",
       "role": "security",
-      "status": "planned",
+      "status": "active",
       "purpose": "Enforce permissions, policy checks, audit requirements, secrets safety, and high-impact controls."
     }
   ]
