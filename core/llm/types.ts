@@ -1,4 +1,4 @@
-export type LLMProvider = "openai" | "anthropic" | "google";
+export type LLMProvider = "openai" | "anthropic" | "google" | "meta";
 export type LLMTaskType = "reasoning" | "research" | "coding" | "analysis" | "creative" | "structured";
 export interface LLMMessage { role: "system" | "user" | "assistant"; content: string; }
 export interface LLMRequest { messages: LLMMessage[]; taskType?: LLMTaskType; temperature?: number; maxTokens?: number; responseFormat?: "text" | "json"; metadata?: Record<string, unknown>; }
