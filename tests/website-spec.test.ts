@@ -1,0 +1,2 @@
+import { createWebsiteSpec } from "../core/website/spec";
+test("website spec creates pages and purposeful 3D plan",()=>{const s=createWebsiteSpec({companyId:"c",name:"Demo",description:"automates invoices",targetCustomer:"small businesses",desiredOutcome:"save time",siteType:"saas",include3D:true});expect(s.pages.length).toBeGreaterThan(3);expect(s.assets.some(a=>a.type==="3d_scene")).toBe(true);expect(s.acceptance.some(x=>x.includes("deployment"))).toBe(true);});
