@@ -5,6 +5,7 @@ import {createSupabaseRuntimeStoreFromEnv} from "../persistence";
 import {SupabaseMemoryStore} from "../memory/supabase-store";
 import {SupabaseApprovalStore} from "../governance/supabase-store";
 import {GovernanceController} from "../governance";
+import {buildAcquisitionBlueprint} from "../growth";
 import type {AgentDefinition} from "../agent-runtime/types";
 export function companyForgeAgentCatalog():AgentDefinition[]{return[
 {id:"ceo",name:"AI CEO / Orchestrator",role:"orchestrator",status:"planned",purpose:"Own company goals, decompose objectives, delegate work, track dependencies, resolve conflicts, and escalate high-impact decisions."},
@@ -24,5 +25,6 @@ export function createCompanyForgeRuntime(){
  const runtimeStore=createSupabaseRuntimeStoreFromEnv(); const url=process.env.SUPABASE_URL!; const key=process.env.SUPABASE_SECRET_KEY??process.env.SUPABASE_PUBLISHABLE_KEY!;
  const approvalStore=new SupabaseApprovalStore(url,key); const governance=new GovernanceController(approvalStore); const memoryStore=new SupabaseMemoryStore({url,key}); const router=new MultiProviderRouter(); const catalog=companyForgeAgentCatalog(); const planner=new AICEOPlanner(router,catalog,runtimeStore,memoryStore); const runtime=new AgentRuntime(runtimeStore,governance);
  runtime.register(catalog[0],{allowed_levels:["READ","WRITE"],can_delegate:true},async({task})=>{const plan=await planner.plan({company_id:task.company_id,objective:task.objective,constraints:task.constraints,context:task.inputs});return{summary:"AI CEO produced a validated execution plan with "+plan.tasks.length+" tasks.",evidence:plan.evidence,artifacts:["orchestration_plan:"+JSON.stringify({plan_id:plan.plan_id,tasks:plan.tasks})],next_actions:["Execute validated child tasks through Agent Runtime."]}});
+ runtime.register(catalog.find(a=>a.id==="growth")!,{allowed_levels:["READ","WRITE"],can_delegate:false},async({task})=>{const i=task.inputs as Record<string,unknown>;const blueprint=buildAcquisitionBlueprint({businessIdea:String(i.business_idea??task.objective),customerDescription:String(i.customer_description??"target customers"),offer:String(i.offer??"company offer"),destinationUrl:String(i.destination_url??""),includePaid:Boolean(i.include_paid),includeLocal:Boolean(i.include_local)});return{summary:"Growth Agent produced an acquisition blueprint.",evidence:["target="+blueprint.target.model,"free_channels="+blueprint.freeChannels.join(",")],artifacts:["acquisition_blueprint:"+JSON.stringify(blueprint)],next_actions:["Review the target and channel hypotheses.","Require approval before paid campaigns or external publishing."]}});
  return runtime;
 }
