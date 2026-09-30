@@ -1,0 +1,1 @@
+import assert from "node:assert/strict"; import {planGrowthExperiment,completeGrowthExperiment} from "../core/growth"; const e=completeGrowthExperiment(planGrowthExperiment({channel:"search",hypothesis:"h",metric:"leads",budget:10}),4); assert.equal(e.status,"completed"); console.log("Growth tests passed.");
