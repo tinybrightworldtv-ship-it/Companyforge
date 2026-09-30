@@ -1,0 +1,45 @@
+{
+  "schema_version": "0.1",
+  "required": [
+    "task_id",
+    "company_id",
+    "objective",
+    "assigned_agent",
+    "inputs",
+    "constraints",
+    "expected_outcome"
+  ],
+  "task": {
+    "task_id": "unique-task-id",
+    "company_id": "company-id",
+    "parent_task_id": null,
+    "objective": "What must be accomplished",
+    "assigned_agent": "agent-id",
+    "priority": "normal",
+    "inputs": {},
+    "constraints": [],
+    "dependencies": [],
+    "expected_outcome": "Measurable result",
+    "approval": {
+      "required": false,
+      "status": "not_required"
+    },
+    "status": "queued"
+  },
+  "allowed_statuses": [
+    "queued",
+    "running",
+    "blocked",
+    "awaiting_approval",
+    "completed",
+    "failed",
+    "cancelled"
+  ],
+  "completion_requirements": [
+    "Agent reports a concrete outcome.",
+    "Artifacts or evidence are attached when applicable.",
+    "Failures and blockers are explicitly reported.",
+    "Required approvals are satisfied.",
+    "Consequential actions are recorded in the audit trail."
+  ]
+}
