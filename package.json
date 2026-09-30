@@ -4,7 +4,7 @@
   "private": true,
   "description": "Autonomous AI company platform",
   "scripts": {
-    "test": "tsx tests/agent-runtime.test.ts && tsx tests/memory.test.ts && tsx tests/llm.test.ts && tsx tests/orchestrator.test.ts && tsx tests/orchestration.test.ts"
+    "test": "tsx tests/agent-runtime.test.ts && tsx tests/memory.test.ts && tsx tests/llm.test.ts && tsx tests/orchestrator.test.ts && tsx tests/orchestration.test.ts && tsx tests/governance.test.ts"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
