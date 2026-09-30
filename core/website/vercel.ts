@@ -1,0 +1,3 @@
+export type VercelDeploymentStatus="QUEUED"|"BUILDING"|"READY"|"ERROR"|"CANCELED";
+export interface VercelPreviewResult{deploymentUrl?:string;status:VercelDeploymentStatus;deploymentId?:string;commitSha?:string;evidence:Record<string,unknown>}
+export function interpretVercelDeployment(input:{url?:string;status?:string;id?:string;commitSha?:string}):VercelPreviewResult{const raw=(input.status??"QUEUED").toUpperCase();const status:VercelDeploymentStatus=["QUEUED","BUILDING","READY","ERROR","CANCELED"].includes(raw)?raw as VercelDeploymentStatus:"QUEUED";return{deploymentUrl:input.url,status,deploymentId:input.id,commitSha:input.commitSha,evidence:{provider:"vercel",observedStatus:status}}}
