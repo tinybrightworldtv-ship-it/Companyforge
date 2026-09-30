@@ -9,12 +9,15 @@ import {
   AuditEvent,
   PermissionLevel,
 } from "./types";
+import { RuntimeStore } from "../persistence/runtime-store";
 
 export class AgentRuntime {
   private readonly agents = new Map<string, AgentDefinition>();
   private readonly policies = new Map<string, AgentPolicy>();
   private readonly handlers = new Map<string, AgentHandler>();
   private readonly auditEvents: AuditEvent[] = [];
+
+  constructor(private readonly store?: RuntimeStore) {}
 
   register(
     agent: AgentDefinition,
@@ -67,6 +70,25 @@ export class AgentRuntime {
     }
   }
 
+  private async persistTask(task: AgentTask, result?: AgentResult): Promise<void> {
+    if (!this.store) return;
+    await this.store.saveTask(task, result ? {
+      status: result.status,
+      summary: result.summary,
+      evidence: result.evidence,
+      artifacts: result.artifacts,
+      next_actions: result.next_actions,
+      risks: result.risks,
+      approval_required: result.approval_required,
+      audit_event_id: result.audit_event_id,
+    } : undefined);
+  }
+
+  private async persistAuditEvent(event: AuditEvent): Promise<void> {
+    if (!this.store) return;
+    await this.store.saveAuditEvent(event);
+  }
+
   async run(
     task: AgentTask,
     permissionLevel: PermissionLevel = "READ",
@@ -102,6 +124,7 @@ export class AgentRuntime {
       }
 
       task.status = "running";
+      await this.persistTask(task);
       const output = await handler({ task, agent, policy });
 
       task.status = "completed";
@@ -113,7 +136,7 @@ export class AgentRuntime {
       };
       this.auditEvents.push(event);
 
-      return {
+      const result: AgentResult = {
         status: "completed",
         summary: output.summary,
         evidence: output.evidence ?? [],
@@ -123,6 +146,9 @@ export class AgentRuntime {
         approval_required: false,
         audit_event_id: event.event_id,
       };
+      await this.persistTask(task, result);
+      await this.persistAuditEvent(event);
+      return result;
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       const blocked = message.startsWith("Permission denied") ||
@@ -139,7 +165,7 @@ export class AgentRuntime {
       };
       this.auditEvents.push(event);
 
-      return {
+      const result: AgentResult = {
         status: blocked ? "blocked" : "failed",
         summary: message,
         evidence: [],
@@ -151,6 +177,9 @@ export class AgentRuntime {
         approval_required: message.includes("requires explicit approval"),
         audit_event_id: event.event_id,
       };
+      await this.persistTask(task, result);
+      await this.persistAuditEvent(event);
+      return result;
     }
   }
 
