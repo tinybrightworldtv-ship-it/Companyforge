@@ -1,0 +1,2 @@
+import assert from "node:assert/strict"; import {createExperiment,recordMetric,evaluateExperiment,recommendNextExperiment} from "../core/analytics";
+let e=createExperiment({experimentId:"e",companyId:"c",hypothesis:"x",metric:"conversion",baseline:1,target:2}); e=recordMetric(e,{metric:"conversion",value:2,timestamp:"2026-09-30T00:00:00Z",source:"test"}); e=evaluateExperiment(e); assert.equal(e.status,"validated"); assert.ok(recommendNextExperiment(e)); console.log("Analytics tests passed.");
