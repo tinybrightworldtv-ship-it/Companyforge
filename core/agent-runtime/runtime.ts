@@ -1,3 +1,5 @@
+import { randomUUID } from "node:crypto";
+
 import {
   AgentDefinition,
   AgentHandler,
@@ -81,7 +83,7 @@ export class AgentRuntime {
     if (!handler) throw new Error(`No handler registered for agent: ${agent.id}`);
 
     const auditBase = {
-      event_id: crypto.randomUUID(),
+      event_id: randomUUID(),
       timestamp: new Date().toISOString(),
       company_id: task.company_id,
       agent_id: agent.id,
