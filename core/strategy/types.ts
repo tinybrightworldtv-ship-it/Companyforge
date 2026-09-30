@@ -1,0 +1,1 @@
+export interface StrategyBrief{objective:string;targetCustomer:string;problem:string;positioning:string;businessModel:string;priorities:string[];experiments:string[];risks:string[];evidence:string[];}
