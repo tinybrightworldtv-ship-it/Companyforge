@@ -1,0 +1,1 @@
+import assert from "node:assert/strict"; import {createResearchReport,addFinding} from "../core/research"; let r=createResearchReport({query:"q",market:"US"}); r=addFinding(r,{claim:"claim",source:"source",confidence:.9,observedAt:"t"}); assert.equal(r.findings.length,1); console.log("Research tests passed.");
