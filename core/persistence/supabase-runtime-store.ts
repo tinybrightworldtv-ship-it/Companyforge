@@ -63,6 +63,13 @@ export class SupabaseRuntimeStore implements TaskQueueStore {
     return (await response.json()).map((row: any) => this.toTask(row));
   }
 
+  async getTask(taskId: string): Promise<AgentTask | null> {
+    const response = await fetch(`${this.restUrl}/runtime_tasks?id=eq.${encodeURIComponent(taskId)}&limit=1`, { headers: this.headers });
+    if (!response.ok) throw new Error(`Supabase task lookup failed: ${response.status} ${await response.text()}`);
+    const rows = await response.json();
+    return rows[0] ? this.toTask(rows[0]) : null;
+  }
+
   async claimTask(taskId: string): Promise<AgentTask | null> {
     const response = await fetch(
       `${this.restUrl}/runtime_tasks?id=eq.${encodeURIComponent(taskId)}&status=eq.queued`,
