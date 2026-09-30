@@ -1,6 +1,6 @@
 import {NextResponse} from "next/server";
 import {createClient as createSupabaseClient} from "@supabase/supabase-js";
-import {validateRevenueEvent} from "../../../../../../../core/growth/revenue-events";
+import {validateRevenueEvent} from "../../../../../../core/growth/revenue-events";
 
 export async function POST(request:Request){
   const expected=process.env.INTERNAL_EVENT_INGEST_SECRET;
