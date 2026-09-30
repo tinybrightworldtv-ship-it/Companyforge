@@ -1,3 +1,8 @@
+import assert from "node:assert/strict";
 import {buildQAReport} from "../core/qa";
-test("critic fails when a blocking browser check fails",()=>{const r=buildQAReport({websiteBuildId:"b1",checks:[{kind:"page",status:"pass",message:"Page loaded",evidence:{httpStatus:200}},{kind:"console",status:"fail",message:"Console error detected",evidence:{count:1},fix:"Fix runtime error"}]});expect(r.status).toBe("failed");expect(r.blockingIssues).toContain("Console error detected")});
-test("critic passes with evidence-backed checks",()=>{const r=buildQAReport({websiteBuildId:"b1",checks:[{kind:"page",status:"pass",message:"Page loaded",evidence:{httpStatus:200}}]});expect(r.status).toBe("passed")});
+const failed=buildQAReport({websiteBuildId:"b1",checks:[{kind:"page",status:"pass",message:"Page loaded",evidence:{httpStatus:200}},{kind:"console",status:"fail",message:"Console error detected",evidence:{count:1},fix:"Fix runtime error"}]});
+assert.equal(failed.status,"failed");
+assert.ok(failed.blockingIssues.includes("Console error detected"));
+const passed=buildQAReport({websiteBuildId:"b1",checks:[{kind:"page",status:"pass",message:"Page loaded",evidence:{httpStatus:200}}]});
+assert.equal(passed.status,"passed");
+console.log("QA critic tests passed.");
