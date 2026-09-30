@@ -1,0 +1,1 @@
+import assert from "node:assert/strict";import {sourcesToEvidence} from "../core/research/web-provider";const e=sourcesToEvidence([{title:"Example",url:"https://example.com",text:"evidence",observedAt:"2026-01-01"}]);assert.equal(e[0].sourceUrl,"https://example.com");assert.equal(e[0].confidence,.65);console.log("Research agent tests passed.");
