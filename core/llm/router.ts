@@ -11,7 +11,7 @@ export class MultiProviderRouter {
     if(provider==="openai"&&process.env.OPENAI_API_KEY){const {OpenAIAdapter}=require("./openai");return new OpenAIAdapter();}
     if(provider==="anthropic"&&process.env.ANTHROPIC_API_KEY){const {AnthropicAdapter}=require("./anthropic");return new AnthropicAdapter();}
     if(provider==="google"&&process.env.GOOGLE_API_KEY){const {GoogleGeminiAdapter}=require("./google");return new GoogleGeminiAdapter();}
-    if(provider==="meta"&&process.env.META_API_KEY){const {MetaLlamaAdapter}=require("./meta");return new MetaLlamaAdapter();}
+    if(provider==="meta"&&process.env.META_API_KEY){const {MetaModelAdapter}=require("./meta");return new MetaLlamaAdapter();}
     return undefined;
   }
   private order(task?:LLMTaskType):LLMAdapter[] {
