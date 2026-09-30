@@ -28,7 +28,7 @@ export class CompanyForgeWorker {
       const claimed = await this.queue.claimTask(candidate.task_id);
       if (!claimed) continue;
 
-      const executionTask: AgentTask = { ...claimed, status: "queued" };
+      const executionTask: AgentTask = { ...claimed, dependencies: [], status: "queued" };
       const risk = executionTask.priority === "critical" ? "high" : executionTask.priority === "high" ? "medium" : "low";
       const result = await this.runtime.run(executionTask, "WRITE", "worker", risk);
       return { claimed: true, taskId: executionTask.task_id, result };
