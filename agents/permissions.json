@@ -1,0 +1,74 @@
+{
+  "schema_version": "0.1",
+  "levels": {
+    "READ": {
+      "description": "Inspect approved information without changing it."
+    },
+    "WRITE": {
+      "description": "Create or modify approved artifacts within an explicit scope."
+    },
+    "EXECUTE": {
+      "description": "Trigger an approved workflow or external action."
+    },
+    "HIGH_IMPACT": {
+      "description": "Consequential actions requiring explicit approval unless an explicit autonomy policy permits them."
+    }
+  },
+  "default_policy": {
+    "allow_by_default": false,
+    "require_scope": true,
+    "require_audit": true,
+    "require_approval_for_high_impact": true
+  },
+  "agent_policies": {
+    "ceo": {
+      "allowed_levels": ["READ", "WRITE"],
+      "can_delegate": true,
+      "can_approve_high_impact": false
+    },
+    "research": {
+      "allowed_levels": ["READ", "WRITE"],
+      "can_delegate": false
+    },
+    "strategy": {
+      "allowed_levels": ["READ", "WRITE"],
+      "can_delegate": false
+    },
+    "product": {
+      "allowed_levels": ["READ", "WRITE"],
+      "can_delegate": false
+    },
+    "builder": {
+      "allowed_levels": ["READ", "WRITE"],
+      "can_delegate": false
+    },
+    "qa": {
+      "allowed_levels": ["READ", "WRITE"],
+      "can_delegate": false
+    },
+    "growth": {
+      "allowed_levels": ["READ", "WRITE", "EXECUTE"],
+      "can_delegate": false
+    },
+    "customer_intelligence": {
+      "allowed_levels": ["READ", "WRITE"],
+      "can_delegate": false
+    },
+    "operations": {
+      "allowed_levels": ["READ", "WRITE", "EXECUTE"],
+      "can_delegate": false
+    },
+    "analytics": {
+      "allowed_levels": ["READ", "WRITE"],
+      "can_delegate": false
+    },
+    "finance": {
+      "allowed_levels": ["READ", "WRITE"],
+      "can_delegate": false
+    },
+    "security": {
+      "allowed_levels": ["READ", "WRITE"],
+      "can_delegate": false
+    }
+  }
+}
