@@ -1,5 +1,5 @@
 import { AgentTask, AuditEvent } from "../agent-runtime/types";
-import { RuntimeStore } from "./runtime-store";
+import { RuntimeStore, TaskQueueStore } from "./runtime-store";
 
 type SupabaseRuntimeStoreConfig = {
   url: string;
@@ -7,7 +7,7 @@ type SupabaseRuntimeStoreConfig = {
   accessToken?: string;
 };
 
-export class SupabaseRuntimeStore implements RuntimeStore {
+export class SupabaseRuntimeStore implements TaskQueueStore {
   private readonly restUrl: string;
   private readonly headers: Record<string, string>;
 
@@ -53,7 +53,43 @@ export class SupabaseRuntimeStore implements RuntimeStore {
     }
   }
 
-  async saveAuditEvent(event: AuditEvent): Promise<void> {
+
+  async listQueuedTasks(companyId: string, limit = 10): Promise<AgentTask[]> {
+    const response = await fetch(
+      `${this.restUrl}/runtime_tasks?company_id=eq.${encodeURIComponent(companyId)}&status=eq.queued&order=created_at.asc&limit=${Math.max(1, Math.min(limit, 100))}`,
+      { headers: this.headers }
+    );
+    if (!response.ok) throw new Error(`Supabase queue read failed: ${response.status} ${await response.text()}`);
+    return (await response.json()).map((row: any) => this.toTask(row));
+  }
+
+  async claimTask(taskId: string): Promise<AgentTask | null> {
+    const response = await fetch(
+      `${this.restUrl}/runtime_tasks?id=eq.${encodeURIComponent(taskId)}&status=eq.queued`,
+      { method: "PATCH", headers: { ...this.headers, Prefer: "return=representation" }, body: JSON.stringify({ status: "running" }) }
+    );
+    if (!response.ok) throw new Error(`Supabase task claim failed: ${response.status} ${await response.text()}`);
+    const rows = await response.json();
+    return rows[0] ? this.toTask(rows[0]) : null;
+  }
+
+  private toTask(row: any): AgentTask {
+    return {
+      task_id: row.id,
+      company_id: row.company_id,
+      parent_task_id: row.parent_task_id,
+      objective: row.objective,
+      assigned_agent: row.assigned_agent,
+      priority: row.priority,
+      inputs: row.inputs ?? {},
+      constraints: row.constraints ?? [],
+      dependencies: row.dependencies ?? [],
+      expected_outcome: row.expected_outcome,
+      approval: { required: row.approval_required, status: row.approval_status, approval_id: row.approval_id ?? undefined },
+      status: row.status,
+    };
+  }
+\n  async saveAuditEvent(event: AuditEvent): Promise<void> {
     const response = await fetch(`${this.restUrl}/audit_events`, {
       method: "POST",
       headers: this.headers,
