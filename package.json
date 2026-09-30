@@ -1,2 +1,14 @@
 {
-  "name":"companyforge","version":"0.1.0","private":true,"description":"Autonomous AI company platform","scripts":{"test":"tsx tests/agent-runtime.test.ts && tsx tests/memory.test.ts && tsx tests/llm.test.ts && tsx tests/orchestrator.test.ts"},"devDependencies":{"@types/node":"^24.0.0","tsx":"^4.20.0","typescript":"^5.9.0"}}
+  "name": "companyforge",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Autonomous AI company platform",
+  "scripts": {
+    "test": "tsx tests/agent-runtime.test.ts && tsx tests/memory.test.ts && tsx tests/llm.test.ts && tsx tests/orchestrator.test.ts && tsx tests/orchestration.test.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  }
+}
