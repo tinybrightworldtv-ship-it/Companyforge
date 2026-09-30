@@ -40,7 +40,7 @@
       "id": "qa",
       "name": "QA / Critic Agent",
       "role": "qa",
-      "status": "planned",
+      "status": "active",
       "purpose": "Challenge plans, inspect changes, find defects, and verify acceptance criteria."
     },
     {
