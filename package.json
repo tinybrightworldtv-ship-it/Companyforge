@@ -4,7 +4,7 @@
   "private": true,
   "description": "Autonomous AI company platform",
   "scripts": {
-    "test": "tsx tests/agent-runtime.test.ts && tsx tests/memory.test.ts && tsx tests/llm.test.ts && tsx tests/orchestrator.test.ts && tsx tests/orchestration.test.ts && tsx tests/governance.test.ts && tsx tests/website-spec.test.ts && tsx tests/website-builder.test.ts && tsx tests/website-preview.test.ts && tsx tests/qa-critic.test.ts && tsx tests/qa-repair.test.ts && tsx tests/improvement.test.ts && tsx tests/runtime-bootstrap.test.ts && tsx tests/runtime-worker.test.ts && tsx tests/analytics.test.ts && tsx tests/operations.test.ts && tsx tests/research.test.ts && tsx tests/product.test.ts && tsx tests/growth.test.ts && tsx tests/growth-distribution.test.ts && tsx tests/social-meta.test.ts && tsx tests/trends-targeting.test.ts"
+    "test": "tsx tests/agent-runtime.test.ts && tsx tests/memory.test.ts && tsx tests/llm.test.ts && tsx tests/orchestrator.test.ts && tsx tests/orchestration.test.ts && tsx tests/governance.test.ts && tsx tests/website-spec.test.ts && tsx tests/website-builder.test.ts && tsx tests/website-preview.test.ts && tsx tests/qa-critic.test.ts && tsx tests/qa-repair.test.ts && tsx tests/improvement.test.ts && tsx tests/runtime-bootstrap.test.ts && tsx tests/runtime-worker.test.ts && tsx tests/analytics.test.ts && tsx tests/operations.test.ts && tsx tests/research.test.ts && tsx tests/product.test.ts && tsx tests/growth.test.ts && tsx tests/growth-distribution.test.ts && tsx tests/social-meta.test.ts && tsx tests/trends-targeting.test.ts && tsx tests/event-ingestion.test.ts"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
