@@ -22,7 +22,7 @@ export default function NewCompanyPage() {
     const res = await fetch("/api/companies", { method: "POST", headers: {"content-type":"application/json"}, body: JSON.stringify(form) });
     const data = await res.json();
     if (!res.ok) { setError(data.error || "Could not create company."); setBusy(false); return; }
-    router.push("/");
+    if (data.taskId) await fetch("/api/tasks/run", {method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({taskId:data.taskId})}); router.push("/");
   }
 
   return <main className="form-shell">
