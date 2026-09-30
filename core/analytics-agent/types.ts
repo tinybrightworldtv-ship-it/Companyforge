@@ -1,0 +1,1 @@
+export interface MetricSnapshot{metric:string;value:number;period:string;source:string}export interface AnalyticsReport{summary:string;snapshots:MetricSnapshot[];anomalies:string[];recommendations:string[];evidence:string[]}
