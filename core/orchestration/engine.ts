@@ -20,7 +20,7 @@ export class TaskOrchestrationEngine {
   }
   private async executeWithRetry(task: AgentTask): Promise<TaskExecutionRecord> {
     let attempts=0; let last: AgentResult|undefined;
-    while(attempts<=this.maxRetries){ attempts++; last=await this.runtime.run(task,"WRITE","orchestrated-task"); if(last.status==="completed") return {taskId:task.task_id,attempts,outcome:"completed",result:last}; if(last.status==="blocked"||last.approval_required) return {taskId:task.task_id,attempts,outcome:"awaiting_approval",result:last}; }
+    while(attempts<=this.maxRetries){ attempts++; const executableTask={...task,dependencies:[]}; last=await this.runtime.run(executableTask,"WRITE","orchestrated-task","low"); if(last.status==="completed") return {taskId:task.task_id,attempts,outcome:"completed",result:last}; if(last.status==="blocked"||last.approval_required) return {taskId:task.task_id,attempts,outcome:"awaiting_approval",result:last}; }
     return {taskId:task.task_id,attempts,outcome:"failed",result:last,error:last?.summary};
   }
 }
