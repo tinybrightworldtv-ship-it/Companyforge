@@ -10,6 +10,8 @@ import {
   PermissionLevel,
 } from "./types";
 import { RuntimeStore } from "../persistence/runtime-store";
+import { GovernanceController } from "../governance/controller";
+import { ActionRisk } from "../governance/types";
 
 export class AgentRuntime {
   private readonly agents = new Map<string, AgentDefinition>();
@@ -17,7 +19,7 @@ export class AgentRuntime {
   private readonly handlers = new Map<string, AgentHandler>();
   private readonly auditEvents: AuditEvent[] = [];
 
-  constructor(private readonly store?: RuntimeStore) {}
+  constructor(private readonly store?: RuntimeStore, private readonly governance?: GovernanceController) {}
 
   register(
     agent: AgentDefinition,
@@ -119,6 +121,20 @@ export class AgentRuntime {
     try {
       this.authorize(agent.id, permissionLevel, task);
 
+      if (this.governance) {
+        const risk: ActionRisk = permissionLevel === "HIGH_IMPACT" ? "critical" :
+          permissionLevel === "EXECUTE" ? "high" :
+          permissionLevel === "WRITE" ? "medium" : "low";
+        const governance = await this.governance.authorize(task, agent.id, permissionLevel, risk);
+        if (!governance.allowed) {
+          if (governance.approvalRequired) {
+            task.status = "awaiting_approval";
+            task.approval = { required: true, status: "pending", approval_id: governance.approvalId };
+          }
+          throw new Error(governance.reason ?? "Governance policy blocked execution.");
+        }
+      }
+
       if (task.dependencies?.length) {
         throw new Error("Task dependencies must be resolved before execution.");
       }
@@ -153,6 +169,7 @@ export class AgentRuntime {
       const message = error instanceof Error ? error.message : String(error);
       const blocked = message.startsWith("Permission denied") ||
         message.includes("requires explicit approval") ||
+        message.includes("Governance policy") ||
         message.includes("dependencies");
 
       task.status = blocked ? "blocked" : "failed";
