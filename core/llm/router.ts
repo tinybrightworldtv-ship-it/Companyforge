@@ -11,7 +11,7 @@ export class MultiProviderRouter {
     this.adapters=options.adapters??[
       process.env.OPENAI_API_KEY ? new OpenAIAdapter() : undefined,
       process.env.ANTHROPIC_API_KEY ? new AnthropicAdapter() : undefined,
-      process.env.GOOGLE_API_KEY ? new GoogleGeminiAdapter() : undefined,
+      process.env.GOOGLE_API_KEY ? new GoogleAdapter() : undefined,
       process.env.META_API_KEY ? new MetaModelAdapter() : undefined
     ].filter(Boolean) as LLMAdapter[];
   }
