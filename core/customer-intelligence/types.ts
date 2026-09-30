@@ -1,0 +1,1 @@
+export interface CustomerInsight{theme:string;signal:string;source:string;confidence:number;implication:string;recommendedAction:string}export interface CustomerIntelligenceReport{period:string;insights:CustomerInsight[];questions:string[];experiments:string[]}
