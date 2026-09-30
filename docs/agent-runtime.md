@@ -1,6 +1,10 @@
-# CompanyForge Agent Runtime v0.1
+# CompanyForge Agent Runtime v0.2
 
 The Agent Runtime is the execution boundary between CompanyForge tasks and agent handlers.
+
+## Persistent state
+
+The runtime now accepts a `RuntimeStore`. The repository includes `InMemoryRuntimeStore` for tests and `SupabaseRuntimeStore` for durable task and audit persistence. The live Supabase project uses `companies` as the ownership boundary, `runtime_tasks` for the full task contract, `audit_events` for durable execution evidence, and the existing `company_memory` table for company memory.
 
 ## What it does
 
@@ -26,8 +30,8 @@ High-impact operations require an approved task gate.
 ## Next integration boundary
 
 The next implementation should connect this runtime to:
-1. persistent company/task storage;
-2. an LLM adapter;
-3. tool adapters;
-4. GitHub workspace operations;
-5. durable audit storage.
+1. an LLM adapter;
+2. agent/task orchestration persistence;
+3. GitHub workspace operations;
+4. approvals and autonomy controls;
+5. durable company memory retrieval and writing.
