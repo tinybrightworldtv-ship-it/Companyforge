@@ -13,7 +13,7 @@ export class AgentRuntime {
  private async persistAuditEvent(e:AuditEvent){if(this.store)await this.store.saveAuditEvent(e);}
  async run(task:AgentTask,permissionLevel:PermissionLevel="READ",scope="task",risk:ActionRisk="low"):Promise<AgentResult>{
   if(task.status!=="queued")throw new Error("Task "+task.task_id+" cannot run from status "+task.status+".");
-  const agent=this.getAgent(task.assigned_agent); const policy=this.getPolicy(task.assigned_agent); const handler=this.handlers.get(task.assigned_agent); if(!handler)throw new Error("No handler registered for agent: "+agent.id);
+  const agent=this.getAgent(task.assigned_agent); const policy=this.getPolicy(task.assigned_agent); if(agent.status!=="active")throw new Error("Agent "+agent.id+" is not active."); const handler=this.handlers.get(task.assigned_agent); if(!handler)throw new Error("No handler registered for agent: "+agent.id);
   const auditBase={event_id:randomUUID(),timestamp:new Date().toISOString(),company_id:task.company_id,agent_id:agent.id,task_id:task.task_id,action:"agent.run",permission_level:permissionLevel,scope,approval_id:task.approval?.approval_id??null};
   try {
    this.authorize(agent.id,permissionLevel,task);
