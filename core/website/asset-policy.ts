@@ -1,0 +1,2 @@
+export type AssetGenerationJob={assetType:"logo"|"image"|"illustration"|"3d_scene"|"3d_model";prompt:string;status:"planned"|"generating"|"ready"|"failed";evidence?:string};
+export function createAssetJobs(prompts:Array<{type:AssetGenerationJob["assetType"];prompt:string}>):AssetGenerationJob[]{return prompts.map(x=>({assetType:x.type,prompt:x.prompt,status:"planned"}));}
