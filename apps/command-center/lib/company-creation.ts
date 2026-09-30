@@ -91,7 +91,7 @@ export async function createCompany(input: CompanyCreationInput) {
     );
     if (memoryError) throw new Error(memoryError.message);
 
-    const { error: taskError } = await supabase.from("runtime_tasks").insert({
+    const { data: runtimeTask, error: taskError } = await supabase.from("runtime_tasks").insert({
       company_id: company.id,
       objective: "Create the company's validated business thesis, research plan, website specification, brand direction, image plan, 3D plan, and execution roadmap.",
       assigned_agent: "ceo",
@@ -103,10 +103,10 @@ export async function createCompany(input: CompanyCreationInput) {
       approval_required: false,
       approval_status: "not_required",
       status: "queued",
-    });
+    }).select("id").single();
     if (taskError) throw new Error(taskError.message);
 
-    return { companyId: company.id, websiteBuildId: website.id };
+    return { companyId: company.id, websiteBuildId: website.id, taskId: runtimeTask?.id };
   } catch (error) {
     await supabase.from("companies").delete().eq("id", company.id).eq("owner_id", userId);
     throw error;
