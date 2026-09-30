@@ -10,18 +10,19 @@ export async function getDashboardSummary(): Promise<DashboardSummary | null> {
   if(!company)return null;
   const [{data:profile},{count:activeAgents},{count:runningTasks},{count:pendingApprovals},{count:failedTasks},{count:openIncidents},{data:recentTasks},{data:events},{data:metricEvents}]=await Promise.all([
     supabase.from("company_profiles").select("desired_outcome,target_customer,autonomy_level").eq("company_id",company.id).maybeSingle(),
-    supabase.from("company_profiles").select("desired_outcome,target_customer,autonomy_level").eq("company_id",company.id).maybeSingle(),
     supabase.from("agents").select("id",{count:"exact",head:true}).eq("company_id",company.id).neq("status","paused"),
     supabase.from("runtime_tasks").select("id",{count:"exact",head:true}).eq("company_id",company.id).eq("status","running"),
     supabase.from("approval_requests").select("id",{count:"exact",head:true}).eq("company_id",company.id).eq("status","pending"),
     supabase.from("runtime_tasks").select("id",{count:"exact",head:true}).eq("company_id",company.id).eq("status","failed"),
     supabase.from("incidents").select("id",{count:"exact",head:true}).eq("company_id",company.id).eq("status","open"),
-    supabase.from("incidents").select("id",{count:"exact",head:true}).eq("company_id",company.id).eq("status","open"),
     supabase.from("runtime_tasks").select("id,objective,assigned_agent,status").eq("company_id",company.id).order("created_at",{ascending:false}).limit(8),
     supabase.from("acquisition_events").select("event_type,visitor_id,value,currency").eq("company_id",company.id),
     supabase.from("company_metric_events").select("event_type,value,currency").eq("company_id",company.id)
   ]);
-  const all=[...(events??[]),...(metricEvents??[])];
+  type MetricRow={event_type:string;visitor_id?:string|null;value?:number|null;currency?:string|null};
+  const eventRows=(events??[]) as MetricRow[];
+  const metricRows=(metricEvents??[]) as MetricRow[];
+  const all:MetricRow[]=[...eventRows,...metricRows];
   const visitors=all.filter(e=>e.event_type==="page_view").length;
   const unique=new Set(all.filter(e=>e.event_type==="page_view"&&e.visitor_id).map(e=>e.visitor_id)).size;
   const leads=all.filter(e=>["lead","qualified_lead"].includes(e.event_type)).length;
