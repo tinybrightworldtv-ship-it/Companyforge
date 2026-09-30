@@ -1,0 +1,1 @@
+export interface RepairAction{path:string;finding:string;change:string;severity:"low"|"medium"|"high"|"critical"}export interface RepairPlan{actions:RepairAction[];requiresApproval:boolean;reason:string}
