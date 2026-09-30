@@ -1,0 +1,17 @@
+import { chromium } from "playwright";
+const url=process.env.PREVIEW_URL;
+if(!url) throw new Error("PREVIEW_URL is required");
+const browser=await chromium.launch({headless:true});
+const page=await browser.newPage();
+const consoleErrors=[];
+page.on("console",m=>{if(m.type()==="error") consoleErrors.push(m.text())});
+page.on("pageerror",e=>consoleErrors.push(e.message));
+const response=await page.goto(url,{waitUntil:"networkidle",timeout:60000});
+const bodyText=(await page.locator("body").innerText()).trim();
+const links=await page.locator("a").count();
+const buttons=await page.locator("button").count();
+const headings=await page.locator("h1,h2,h3").count();
+const report={url,checks:{page:{status:response?.ok()?"pass":"fail",httpStatus:response?.status()??0},content:{status:bodyText.length>0?"pass":"fail",textLength:bodyText.length},headings:{status:headings>0?"pass":"fail",count:headings},navigation:{status:links>0?"pass":"fail",links},controls:{status:buttons>0||links>0?"pass":"fail",buttons,links},console:{status:consoleErrors.length===0?"pass":"fail",errors:consoleErrors}}};
+console.log(JSON.stringify(report,null,2));
+await browser.close();
+if(Object.values(report.checks).some(c=>c.status==="fail")) process.exit(1);
