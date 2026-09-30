@@ -1,0 +1,1 @@
+export interface FinanceReport{currency?:string;revenue:number;refunds:number;netRevenue:number;observations:string[];alerts:string[];actions:string[];evidence:string[]}
