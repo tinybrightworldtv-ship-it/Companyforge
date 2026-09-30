@@ -17,13 +17,13 @@ import {FinanceAgent} from "../finance-agent";
 import {SecurityAgent} from "../security-agent";
 import type {AgentDefinition} from "../agent-runtime/types";
 export function companyForgeAgentCatalog():AgentDefinition[]{return[
-{id:"ceo",name:"AI CEO / Orchestrator",role:"orchestrator",status:"planned",purpose:"Own company goals, decompose objectives, delegate work, track dependencies, resolve conflicts, and escalate high-impact decisions."},
+{id:"ceo",name:"AI CEO / Orchestrator",role:"orchestrator",status:"active",purpose:"Own company goals, decompose objectives, delegate work, track dependencies, resolve conflicts, and escalate high-impact decisions."},
 {id:"research",name:"Research Agent",role:"research",status:"active",purpose:"Discover markets, customer problems, competitors, evidence, and opportunities."},
 {id:"strategy",name:"Strategy Agent",role:"strategy",status:"active",purpose:"Turn evidence into positioning, business models, priorities, and experiments."},
 {id:"product",name:"Product Manager Agent",role:"product",status:"active",purpose:"Create product requirements, user stories, acceptance criteria, and product priorities."},
-{id:"builder",name:"Builder Agent",role:"builder",status:"planned",purpose:"Implement approved software and product changes within repository scope."},
+{id:"builder",name:"Builder Agent",role:"builder",status:"active",purpose:"Implement approved software and product changes within repository scope."},
 {id:"qa",name:"QA / Critic Agent",role:"qa",status:"active",purpose:"Challenge plans, inspect changes, find defects, and verify acceptance criteria."},
-{id:"growth",name:"Growth Agent",role:"growth",status:"planned",purpose:"Design and run approved acquisition and growth experiments."},
+{id:"growth",name:"Growth Agent",role:"growth",status:"active",purpose:"Design and run approved acquisition and growth experiments."},
 {id:"customer_intelligence",name:"Customer Intelligence Agent",role:"customer_intelligence",status:"active",purpose:"Turn customer feedback and behavior into insights and opportunities."},
 {id:"operations",name:"Operations Agent",role:"operations",status:"active",purpose:"Monitor recurring technical and business workflows and surface operational issues."},
 {id:"analytics",name:"Analytics Agent",role:"analytics",status:"active",purpose:"Measure performance, experiments, anomalies, and outcome trends."},
