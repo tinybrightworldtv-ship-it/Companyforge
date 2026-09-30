@@ -1,8 +1,8 @@
 import {NextResponse} from "next/server";
 import {createClient} from "../../../lib/supabase/server";
-import {createSupabaseRuntimeStoreFromEnv} from "../../../../../core/persistence";
-import {createCompanyForgeRuntime} from "../../../../../core/runtime";
-import {CompanyForgeWorker} from "../../../../../core/runtime/worker";
+import {createSupabaseRuntimeStoreFromEnv} from "../../../../../../core/persistence";
+import {createCompanyForgeRuntime} from "../../../../../../core/runtime";
+import {CompanyForgeWorker} from "../../../../../../core/runtime/worker";
 
 export async function POST(req:Request){
   const supabase=await createClient();
