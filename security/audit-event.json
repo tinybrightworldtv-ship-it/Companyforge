@@ -1,0 +1,23 @@
+{
+  "schema_version": "0.1",
+  "event": {
+    "event_id": "unique-event-id",
+    "timestamp": "ISO-8601",
+    "company_id": "company-id",
+    "agent_id": "agent-id",
+    "task_id": "task-id",
+    "action": "tool-or-business-action",
+    "permission_level": "READ|WRITE|EXECUTE|HIGH_IMPACT",
+    "scope": "resource-scope",
+    "approval_id": null,
+    "result": "success|failure|blocked",
+    "evidence": [],
+    "error": null
+  },
+  "rules": [
+    "Record consequential actions.",
+    "Do not record secret values.",
+    "Preserve enough context to reconstruct what happened.",
+    "Link approval records when approval was required."
+  ]
+}
