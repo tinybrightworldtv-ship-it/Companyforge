@@ -1,0 +1,2 @@
+export type TaskStatus="queued"|"running"|"blocked"|"awaiting_approval"|"completed"|"failed";
+export interface DashboardSummary{companyId:string;companyName:string;autonomy:string;status:string;activeAgents:number;runningTasks:number;pendingApprovals:number;failedTasks:number;recentTasks:Array<{id:string;objective:string;agent:string;status:TaskStatus}>;}
