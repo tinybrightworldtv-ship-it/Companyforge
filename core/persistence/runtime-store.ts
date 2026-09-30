@@ -5,7 +5,12 @@ export interface RuntimeStore {
   saveAuditEvent(event: AuditEvent): Promise<void>;
 }
 
-export class InMemoryRuntimeStore implements RuntimeStore {
+export interface TaskQueueStore extends RuntimeStore {
+  listQueuedTasks(companyId: string, limit?: number): Promise<AgentTask[]>;
+  claimTask(taskId: string): Promise<AgentTask | null>;
+}
+
+export class InMemoryRuntimeStore implements TaskQueueStore {
   readonly tasks = new Map<string, AgentTask>();
   readonly auditEvents: AuditEvent[] = [];
 
@@ -18,5 +23,18 @@ export class InMemoryRuntimeStore implements RuntimeStore {
 
   async saveAuditEvent(event: AuditEvent): Promise<void> {
     this.auditEvents.push(event);
+  }
+
+  async listQueuedTasks(companyId: string, limit = 10): Promise<AgentTask[]> {
+    return [...this.tasks.values()]
+      .filter(t => t.company_id === companyId && t.status === "queued")
+      .slice(0, limit);
+  }
+
+  async claimTask(taskId: string): Promise<AgentTask | null> {
+    const task = this.tasks.get(taskId);
+    if (!task || task.status !== "queued") return null;
+    this.tasks.set(taskId, { ...task, status: "running" });
+    return { ...task, status: "queued" };
   }
 }
