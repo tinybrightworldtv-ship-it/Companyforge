@@ -2,7 +2,7 @@ import { LLMError } from "./errors";
 import type { LLMAdapter, LLMRequest, LLMResponse, LLMTaskType } from "./types";
 import { OpenAIAdapter } from "./openai";
 import { AnthropicAdapter } from "./anthropic";
-import { GoogleGeminiAdapter } from "./google";
+import { GoogleAdapter } from "./google";
 import { MetaModelAdapter } from "./meta";
 
 export class MultiProviderRouter {
