@@ -1,7 +1,7 @@
 import {NextResponse} from "next/server";
-import {createSupabaseRuntimeStoreFromEnv} from "../../../../../core/persistence";
-import {createCompanyForgeRuntime} from "../../../../../core/runtime";
-import {CompanyForgeWorker} from "../../../../../core/runtime/worker";
+import {createSupabaseRuntimeStoreFromEnv} from "../../../../../../core/persistence";
+import {createCompanyForgeRuntime} from "../../../../../../core/runtime";
+import {CompanyForgeWorker} from "../../../../../../core/runtime/worker";
 
 export async function GET(req:Request){
   const expected=process.env.CRON_SECRET;
