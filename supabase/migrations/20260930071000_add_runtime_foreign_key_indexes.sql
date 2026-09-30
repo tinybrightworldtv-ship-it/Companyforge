@@ -1,0 +1,11 @@
+create index if not exists agents_company_idx on public.agents(company_id);
+create index if not exists approval_requests_decided_by_idx on public.approval_requests(decided_by);
+create index if not exists audit_events_runtime_task_idx on public.audit_events(runtime_task_id);
+create index if not exists companies_owner_idx on public.companies(owner_id);
+create index if not exists company_memory_company_idx on public.company_memory(company_id);
+create index if not exists company_memory_items_source_task_idx on public.company_memory_items(source_task_id);
+create index if not exists projects_company_idx on public.projects(company_id);
+create index if not exists runtime_tasks_parent_task_idx on public.runtime_tasks(parent_task_id);
+create index if not exists tasks_agent_idx on public.tasks(agent_id);
+create index if not exists tasks_company_idx on public.tasks(company_id);
+create index if not exists website_builds_project_idx on public.website_builds(project_id);
