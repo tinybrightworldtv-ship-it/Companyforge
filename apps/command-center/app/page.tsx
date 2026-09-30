@@ -1,14 +1,41 @@
-import {getDashboardSummary} from "../lib/dashboard";
-const Metric=({label,value,detail}:{label:string;value:number|string;detail?:string})=><div className="card"><div className="sub">{label}</div><div className="value">{value}</div>{detail&&<div className="meta">{detail}</div>}</div>;
+import { getDashboardSummary } from "../lib/dashboard";
+
+const Metric=({label,value,detail}:{label:string;value:number|string;detail?:string})=><div className="ceo-metric"><div>{label}</div><strong>{value}</strong>{detail&&<small>{detail}</small>}</div>;
+
 export default async function Home(){
  const d=await getDashboardSummary();
- if(!d)return <main style={{maxWidth:520,margin:"100px auto",padding:24}}><h1>CompanyForge</h1><p>No company has been created for this account yet.</p></main>;
+ if(!d)return <main className="ceo-empty"><div className="ceo-logo">C</div><div className="eyebrow">COMPANYFORGE</div><h1>Your company starts here.</h1><p>Give CompanyForge an idea and your AI workforce can research, plan, build and operate it.</p><a className="ceo-primary" href="/companies/new">Create your company →</a></main>;
  const m=d.metrics;
- return <div className="shell"><aside className="side"><div className="brand">CompanyForge</div><nav className="nav"><div className="active">Command Center</div><a href="/companies/new">Create Company</a><a href="/website">Website Engine</a><a href="/approvals">Approvals</a><a href="/analytics">Analytics</a><div>Agents</div><div>Tasks</div><div>Memory</div><div>Settings</div></nav></aside>
- <main className="main"><header className="top"><div><div className="eyebrow">AI COMPANY OPERATING SYSTEM</div><h1 className="title">{d.companyName}</h1><div className="sub">Visitors, customers, earnings and autonomous operations in one view.</div></div><div className="status">● {d.status}</div></header>
- <section className="metrics"><Metric label="Visitors" value={m.visitors.toLocaleString()} detail={`${m.uniqueVisitors.toLocaleString()} unique`}/><Metric label="Customers" value={m.customers.toLocaleString()} detail={`${(m.conversionRate*100).toFixed(1)}% visitor conversion`}/><Metric label="Earnings" value={`${m.currency} ${m.earnings.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}`} detail={`${m.leads.toLocaleString()} leads`}/><Metric label="Running tasks" value={d.runningTasks}/><Metric label="Pending approvals" value={d.pendingApprovals}/><Metric label="Active agents" value={d.activeAgents}/><Metric label="Open incidents" value={d.openIncidents}/><Metric label="Failed tasks" value={d.failedTasks}/></section>
- <section className="panels"><div className="panel"><h2>Company objective</h2><div className="row"><div><b>Goal</b><div className="meta">{d.goal}</div></div></div><div className="row"><div><b>Target customer</b><div className="meta">{d.targetCustomer}</div></div></div></div><div className="panel"><h2>Business performance</h2><div className="row"><div><b>Visitors</b><div className="meta">Tracked from acquisition and company metric events</div></div><span className="pill">{m.visitors}</span></div><div className="row"><div><b>Earnings</b><div className="meta">Only recorded revenue events; no estimates</div></div><span className="pill">{m.currency} {m.earnings.toFixed(2)}</span></div><div className="row"><div><b>Customers</b><div className="meta">Purchases and subscriptions recorded</div></div><span className="pill">{m.customers}</span></div></div>
- <div className="panel"><h2>Recent tasks</h2>{d.recentTasks.length===0?<div className="row"><div><b>No tasks yet</b><div className="meta">Create a company goal to start the AI workforce.</div></div></div>:d.recentTasks.map(t=><div className="row" key={t.id}><div><b>{t.objective}</b><div className="meta">{t.agent}</div></div><span className="pill">{t.status}</span></div>)}</div></section>
- <section className="panel"><h2>Operations</h2><div className="row"><div><b>Open incidents</b><div className="meta">Service health issues awaiting resolution</div></div><span className="pill">{d.openIncidents}</span></div><div className="row"><div><b>Failed tasks</b><div className="meta">Runtime tasks that ended unsuccessfully</div></div><span className="pill">{d.failedTasks}</span></div></section><section className="panel"><h2>Company controls</h2><div className="row"><div><b>Autonomy</b><div className="meta">Current execution policy</div></div><span className="pill">{d.autonomy}</span></div><div className="row"><div><b>Approvals</b><div className="meta">Human control over risky actions</div></div><span className="pill">{d.pendingApprovals} pending</span></div><div className="row"><div><b>Evidence rule</b><div className="meta">Revenue and activity are shown only from recorded events.</div></div><span className="pill">Verified data</span></div></section>
- </main></div>;
+ const taskCount=d.recentTasks.length;
+ const active=d.runningTasks>0;
+ const phases=[
+  ["01","Understand","Company goal, customer and constraints"],
+  ["02","Research","Market, competitors and customer evidence"],
+  ["03","Strategize","Business model, positioning and execution plan"],
+  ["04","Build","Brand, website, product and infrastructure"],
+  ["05","Launch","Distribution, acquisition and measurement"],
+  ["06","Operate","Customers, revenue, experiments and improvement"]
+ ];
+ return <div className="ceo-shell">
+  <aside className="ceo-sidebar">
+   <div className="ceo-brand"><span className="ceo-logo small">C</span><b>CompanyForge</b></div>
+   <div className="company-switcher"><small>COMPANY</small><strong>{d.companyName}</strong><span>● {d.status}</span></div>
+   <nav><a className="nav-selected" href="/">⌂ Command Center</a><a href="/website">◈ Website</a><a href="/analytics">⌁ Analytics</a><a href="/approvals">✓ Approvals {d.pendingApprovals>0&&<em>{d.pendingApprovals}</em>}</a><a href="/companies/new">＋ New company</a></nav>
+   <div className="sidebar-bottom"><small>AI CEO</small><span>{d.autonomy} mode</span><a href="/settings">Settings →</a></div>
+  </aside>
+  <main className="ceo-main">
+   <header className="ceo-header"><div><div className="eyebrow">AI CEO / COMMAND CENTER</div><h1>{d.companyName}</h1><p>{d.goal}</p></div><div className={active?"live-dot live":"live-dot"}>● {active?"Working":"Standing by"}</div></header>
+   <section className="ceo-hero">
+    <div><span className="ceo-kicker">YOUR AI CEO</span><h2>{active?"CompanyForge is working on your company.":"Your company is ready for its next decision."}</h2><p>{active?"Specialist agents are executing the current task. Results and evidence will appear here as they are recorded.":"CompanyForge coordinates research, strategy, building, growth and operations from one persistent company memory."}</p></div>
+    <div className="ceo-actions"><a href="/website">Open website engine</a><a href="/approvals">Review approvals</a></div>
+   </section>
+   <section className="ceo-metrics"><Metric label="Visitors" value={m.visitors.toLocaleString()} detail={m.uniqueVisitors.toLocaleString()+" unique"}/><Metric label="Leads" value={m.leads}/><Metric label="Customers" value={m.customers}/><Metric label="Earnings" value={m.currency+" "+m.earnings.toFixed(2)}/><Metric label="Agents" value={d.activeAgents}/><Metric label="Tasks running" value={d.runningTasks}/></section>
+   <section className="ceo-grid">
+    <div className="ceo-panel wide"><div className="panel-heading"><div><span className="ceo-kicker">COMPANY JOURNEY</span><h3>From idea to operating company</h3></div><span className="recorded">Persistent workflow</span></div><div className="journey">{phases.map(([n,title,desc],i)=><div className={"journey-step "+(i===0?"current":"")} key={n}><span>{n}</span><div><b>{title}</b><small>{desc}</small></div></div>)}</div></div>
+    <div className="ceo-panel"><div className="panel-heading"><div><span className="ceo-kicker">AI WORKFORCE</span><h3>What is happening</h3></div></div>{taskCount?d.recentTasks.slice(0,5).map(t=><div className="activity" key={t.id}><span className={"activity-dot "+t.status}/><div><b>{t.objective}</b><small>{t.agent} · {t.status.replace("_"," ")}</small></div></div>):<div className="empty-activity"><b>No execution activity yet</b><p>Your first CEO task will appear here.</p></div>}</div>
+    <div className="ceo-panel"><div className="panel-heading"><div><span className="ceo-kicker">COMPANY MEMORY</span><h3>North star</h3></div><a href="/memory">View →</a></div><div className="memory-block"><small>TARGET CUSTOMER</small><p>{d.targetCustomer}</p></div><div className="memory-block"><small>GOAL</small><p>{d.goal}</p></div><div className="memory-block"><small>AUTONOMY</small><p>{d.autonomy} · consequential actions remain governed</p></div></div>
+   </section>
+   <section className="ceo-panel evidence"><div><span className="ceo-kicker">PROOF BEFORE CLAIM</span><h3>CompanyForge only reports recorded activity.</h3><p>Revenue, visitors, customers and operational results come from recorded events and runtime state. The system does not turn assumptions into business results.</p></div><div className="proof-items"><span>✓ Recorded metrics</span><span>✓ Audit trail</span><span>✓ Approval controls</span><span>✓ Persistent memory</span></div></section>
+  </main>
+ </div>
 }
