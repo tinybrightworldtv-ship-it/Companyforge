@@ -1,0 +1,2 @@
+import {queuePreviewBuild} from "../core/website/preview";
+test("preview builds start queued and require evidence for completion",()=>{const b=queuePreviewBuild("build-1");expect(b.status).toBe("queued");expect(b.buildCommand).toBe("npm run build");expect(b.previewUrl).toBeUndefined();});
