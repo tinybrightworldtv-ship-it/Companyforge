@@ -1,5 +1,6 @@
 import { strict as assert } from "node:assert";
 import { AgentRuntime, AgentTask } from "../core/agent-runtime";
+import { InMemoryRuntimeStore } from "../core/persistence";
 
 function task(overrides: Partial<AgentTask> = {}): AgentTask {
   return {
@@ -18,7 +19,8 @@ function task(overrides: Partial<AgentTask> = {}): AgentTask {
 }
 
 async function main() {
-  const runtime = new AgentRuntime();
+  const store = new InMemoryRuntimeStore();
+  const runtime = new AgentRuntime(store);
 
   runtime.register(
     {
@@ -36,6 +38,8 @@ async function main() {
   assert.equal(success.status, "completed");
   assert.equal(success.summary, "ok");
   assert.equal(runtime.getAuditEvents().length, 1);
+  assert.equal(store.tasks.get("test-task")?.status, "completed");
+  assert.equal(store.auditEvents.length, 1);
 
   const blocked = await runtime.run(
     task({
@@ -45,6 +49,7 @@ async function main() {
     "EXECUTE",
   );
   assert.equal(blocked.status, "blocked");
+  assert.equal(store.tasks.get("permission-test")?.status, "blocked");
 
   const highImpactRuntime = new AgentRuntime();
   highImpactRuntime.register(
@@ -82,7 +87,7 @@ async function main() {
   );
   assert.equal(approved.status, "completed");
 
-  console.log("Agent runtime tests passed.");
+  console.log("Agent runtime persistence tests passed.");
 }
 
 main().catch((error) => {
