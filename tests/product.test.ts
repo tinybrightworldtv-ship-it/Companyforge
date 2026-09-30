@@ -1,0 +1,1 @@
+import assert from "node:assert/strict"; import {createProductSpec,addAcceptanceCriteria} from "../core/product"; const s=addAcceptanceCriteria(createProductSpec({problem:"p",targetUser:"u",outcomes:["o"],constraints:[]}),"passes QA"); assert.equal(s.acceptanceCriteria.length,1); console.log("Product tests passed.");
