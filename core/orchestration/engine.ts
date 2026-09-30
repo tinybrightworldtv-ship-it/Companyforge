@@ -10,7 +10,8 @@ export class TaskOrchestrationEngine {
       const ready = [...pending.values()].filter(t => t.company_id === companyId && t.dependencies.every(d => records.some(r => r.taskId === d && r.outcome === "completed")));
       if (!ready.length) { for (const t of pending.values()) records.push({taskId:t.task_id,attempts:0,outcome:"blocked",error:"Unresolved task dependency or dependency failure."}); return {runId,companyId,records,status:"blocked"}; }
       for (const task of ready) {
-        pending.delete(task.task_id); const record = await this.executeWithRetry(task); records.push(record);
+        pending.delete(task.task_id); const executableTask = { ...task, dependencies: [] };
+        const record = await this.executeWithRetry(executableTask); records.push(record);
         if (record.outcome === "failed") for (const dependent of [...pending.values()]) if (dependent.dependencies.includes(task.task_id)) { records.push({taskId:dependent.task_id,attempts:0,outcome:"blocked",error:"Dependency "+task.task_id+" failed."}); pending.delete(dependent.task_id); }
       }
     }
