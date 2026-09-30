@@ -5,25 +5,38 @@ export interface WorkerResult {
   claimed: boolean;
   taskId?: string;
   result?: AgentResult;
+  reason?: string;
 }
 
 export class CompanyForgeWorker {
   constructor(private readonly runtime: AgentRuntime, private readonly queue: TaskQueueStore) {}
 
   async processNext(companyId: string): Promise<WorkerResult> {
-    const queued = await this.queue.listQueuedTasks(companyId, 1);
-    const candidate = queued[0];
-    if (!candidate) return { claimed: false };
+    const candidates = await this.queue.listQueuedTasks(companyId, 10);
+    for (const candidate of candidates) {
+      const dependencies = candidate.dependencies ?? [];
+      let dependenciesReady = true;
+      for (const dependencyId of dependencies) {
+        const dependency = await this.queue.getTask(dependencyId);
+        if (!dependency || dependency.status !== "completed") {
+          dependenciesReady = false;
+          break;
+        }
+      }
+      if (!dependenciesReady) continue;
 
-    const claimed = await this.queue.claimTask(candidate.task_id);
-    if (!claimed) return { claimed: false };
+      const claimed = await this.queue.claimTask(candidate.task_id);
+      if (!claimed) continue;
 
-    // The queue row is already atomically claimed. AgentRuntime receives a
-    // queued execution copy and remains the single authority for execution,
-    // governance, audit, and final persistence.
-    const executionTask: AgentTask = { ...claimed, status: "queued" };
-    const result = await this.runtime.run(executionTask, "WRITE", "worker", executionTask.priority === "critical" ? "high" : executionTask.priority === "high" ? "medium" : "low");
-    return { claimed: true, taskId: executionTask.task_id, result };
+      const executionTask: AgentTask = { ...claimed, status: "queued" };
+      const risk = executionTask.priority === "critical" ? "high" : executionTask.priority === "high" ? "medium" : "low";
+      const result = await this.runtime.run(executionTask, "WRITE", "worker", risk);
+      return { claimed: true, taskId: executionTask.task_id, result };
+    }
+    return {
+      claimed: false,
+      reason: candidates.length ? "Queued tasks are waiting on unresolved dependencies." : "No queued tasks available."
+    };
   }
 
   async processBatch(companyId: string, maxTasks = 10): Promise<WorkerResult[]> {
