@@ -89,7 +89,8 @@ export class SupabaseRuntimeStore implements TaskQueueStore {
       status: row.status,
     };
   }
-\n  async saveAuditEvent(event: AuditEvent): Promise<void> {
+
+  async saveAuditEvent(event: AuditEvent): Promise<void> {
     const response = await fetch(`${this.restUrl}/audit_events`, {
       method: "POST",
       headers: this.headers,
