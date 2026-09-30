@@ -3,12 +3,17 @@ import {createClient as createSupabaseClient} from "@supabase/supabase-js";
 import {validatePublicEvent} from "../../../../../../core/growth/event-ingestion";
 
 const allowedOrigins=()=>process.env.PUBLIC_EVENT_ALLOWED_ORIGINS?.split(",").map(v=>v.trim()).filter(Boolean)??[];
+const corsHeaders=(origin:string|null)=>{
+ const configured=allowedOrigins(); const allow=origin&&configured.includes(origin)?origin:configured.length===0?"*":undefined;
+ return allow?{"Access-Control-Allow-Origin":allow,"Access-Control-Allow-Methods":"POST,OPTIONS","Access-Control-Allow-Headers":"Content-Type"}:{};
+};
+export async function OPTIONS(request:Request){return new NextResponse(null,{status:204,headers:corsHeaders(request.headers.get("origin"))});}
 
 export async function POST(request:Request){
   try{
     const origin=request.headers.get("origin");
     const configured=allowedOrigins();
-    if(configured.length && origin && !configured.includes(origin)) return NextResponse.json({error:"Origin not allowed"},{status:403});
+    if(configured.length && (!origin || !configured.includes(origin))) return NextResponse.json({error:"Origin not allowed"},{status:403,headers:corsHeaders(origin)});
     const event=validatePublicEvent(await request.json());
     const url=process.env.NEXT_PUBLIC_SUPABASE_URL;
     const key=process.env.SUPABASE_SECRET_KEY;
@@ -19,9 +24,9 @@ export async function POST(request:Request){
       source:event.source,medium:event.medium,campaign:event.campaign,content:event.content,
       visitor_id:event.visitorId,metadata:event.metadata??{},occurred_at:event.occurredAt
     });
-    if(error) return NextResponse.json({error:"Event could not be recorded"},{status:500});
-    return NextResponse.json({ok:true});
+    if(error) return NextResponse.json({error:"Event could not be recorded"},{status:500,headers:corsHeaders(origin)});
+    return NextResponse.json({ok:true},{headers:corsHeaders(origin)});
   }catch(error){
-    return NextResponse.json({error:error instanceof Error?error.message:"Invalid event"},{status:400});
+    return NextResponse.json({error:error instanceof Error?error.message:"Invalid event"},{status:400,headers:corsHeaders(request.headers.get("origin"))});
   }
 }
