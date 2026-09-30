@@ -1,5 +1,5 @@
-import { LLMAdapter, LLMRequest, LLMResponse } from "./types.js";
-import { postJson } from "./http.js";
+import { LLMAdapter, LLMRequest, LLMResponse } from "./types";
+import { postJson } from "./http";
 export class AnthropicAdapter implements LLMAdapter {
   provider="anthropic" as const;
   constructor(public readonly model=process.env.ANTHROPIC_MODEL ?? "claude-sonnet-4-5", private readonly apiKey=process.env.ANTHROPIC_API_KEY ?? "") {}
