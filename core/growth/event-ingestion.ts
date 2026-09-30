@@ -29,7 +29,7 @@ export function validatePublicEvent(input:unknown):PublicAcquisitionEvent {
     campaign:text("campaign"),
     content:text("content"),
     visitorId:text("visitorId",128),
-    metadata:value.metadata && typeof value.metadata==="object"?value.metadata as Record<string,unknown>:undefined,
+    metadata:value.metadata && typeof value.metadata==="object"?Object.fromEntries(Object.entries(value.metadata as Record<string,unknown>).slice(0,20).map(([k,v])=>[k,String(v).slice(0,500)])):undefined,
     occurredAt:typeof value.occurredAt==="string"?value.occurredAt:new Date().toISOString()
   };
 }
