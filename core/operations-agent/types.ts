@@ -1,0 +1,1 @@
+export interface OperationsReport{status:"healthy"|"degraded"|"critical";signals:string[];incidents:string[];actions:string[];evidence:string[]}
