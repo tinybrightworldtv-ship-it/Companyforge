@@ -94,7 +94,7 @@ export async function createCompany(input: CompanyCreationInput) {
     const { error: taskError } = await supabase.from("runtime_tasks").insert({
       company_id: company.id,
       objective: "Create the company's validated business thesis, research plan, website specification, brand direction, image plan, 3D plan, and execution roadmap.",
-      assigned_agent: "ai-ceo-orchestrator",
+      assigned_agent: "ceo",
       priority: "high",
       inputs: { targetCustomer: input.targetCustomer, desiredOutcome: input.desiredOutcome, siteType: input.siteType },
       constraints: [input.constraints].filter(Boolean),
