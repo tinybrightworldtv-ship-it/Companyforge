@@ -1,0 +1,9 @@
+import type {ApprovalDecision,ApprovalRequest,ApprovalStore} from "./types";
+export class SupabaseApprovalStore implements ApprovalStore{
+ constructor(private readonly url:string,private readonly key:string){if(!url||!key)throw new Error("Supabase URL and key are required.");}
+ private endpoint(){return this.url.replace(/\/$/,"")+"/rest/v1/approval_requests";}
+ private headers(){return{apikey:this.key,Authorization:"Bearer "+this.key,"Content-Type":"application/json",Prefer:"resolution=merge-duplicates,return=representation"}}
+ async save(request:ApprovalRequest){const r=await fetch(this.endpoint(),{method:"POST",headers:this.headers(),body:JSON.stringify({approval_id:request.approval_id,company_id:request.company_id,task_id:request.task_id,agent_id:request.agent_id,action:request.action,permission_level:request.permission_level,risk:request.risk,reason:request.reason,status:request.status,requested_at:request.requested_at})});if(!r.ok)throw new Error("Approval persistence failed: "+r.status+" "+await r.text());}
+ async get(id:string){const r=await fetch(this.endpoint()+"?approval_id=eq."+encodeURIComponent(id)+"&limit=1",{headers:this.headers()});if(!r.ok)throw new Error("Approval lookup failed: "+r.status);const rows=await r.json() as ApprovalRequest[];return rows[0]??null;}
+ async decide(decision:ApprovalDecision){const r=await fetch(this.endpoint()+"?approval_id=eq."+encodeURIComponent(decision.approval_id)+"&status=eq.pending",{method:"PATCH",headers:this.headers(),body:JSON.stringify({status:decision.status,decided_at:new Date().toISOString(),decided_by:decision.decided_by,decision_note:decision.note??null})});if(!r.ok)throw new Error("Approval decision failed: "+r.status+" "+await r.text());const rows=await r.json() as ApprovalRequest[];if(!rows[0])throw new Error("Approval request not found or already decided.");return rows[0];}
+}
