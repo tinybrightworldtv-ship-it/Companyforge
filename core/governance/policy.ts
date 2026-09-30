@@ -1,0 +1,7 @@
+import { PermissionLevel } from "../agent-runtime/types";
+import { ActionRisk, AutonomyLevel, CompanyAutonomyPolicy } from "./types";
+const rank:Record<ActionRisk,number>={low:1,medium:2,high:3,critical:4};
+export function defaultAutonomyPolicy(companyId:string):CompanyAutonomyPolicy{return{company_id:companyId,level:"supervised",allowed_permission_levels:["READ","WRITE","EXECUTE"],auto_approve_low_risk:true,require_approval_for:["high","critical"]};}
+export function riskRequiresApproval(policy:CompanyAutonomyPolicy,risk:ActionRisk):boolean{if(policy.level==="manual")return true;if(policy.level==="autonomous")return rank[risk]>=rank.critical;if(policy.level==="assisted")return rank[risk]>=rank.medium;return policy.require_approval_for.some(x=>rank[risk]>=rank[x]);}
+export function permissionAllowed(policy:CompanyAutonomyPolicy,p:PermissionLevel):boolean{return policy.allowed_permission_levels.includes(p);}
+export function autonomyDescription(level:AutonomyLevel):string{if(level==="manual")return"Every meaningful action requires approval.";if(level==="assisted")return"AI prepares work; medium+ risk requires approval.";if(level==="supervised")return"Routine permitted work can execute; high/critical risk requires approval.";return"Most permitted work can execute; critical risk remains approval-gated."; }
